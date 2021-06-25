@@ -1,1 +1,1 @@
-# RSImgProsecessing
+# Remote Sensing Image Processing
