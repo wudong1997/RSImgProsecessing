@@ -1,6 +1,4 @@
 import numpy as np
-import readRSImg
-import show_pic
 import show_pic as pic
 
 
@@ -19,7 +17,12 @@ def normalize(matrix):
 
 
 def pca(image):
-    bands = image.shape[2]
+    """
+    对遥感影像进行主成分分析
+    :param image: 输入遥感影响
+    :return: 输出主成分分析变换后的遥感影像
+    """
+    m, n, bands = image.shape
     data = []
     for band in range(bands):
         image[:, :, band] = pic.gray_process(image[:, :, band])
@@ -34,11 +37,17 @@ def pca(image):
     value_index = np.argsort(-featValue)  # 将特征值由大到小排列
 
     reconData = np.dot(data.T, featVec)
+    pca_img = np.zeros((m, n, bands), dtype=np.float32)
 
-    return reconData, value_index
+    for i in value_index:
+        pca_img[:, :, i] = reconData[:, i].reshape(m, n)
+
+    return pca_img
 
 
 def KTTransformation(image):
+    m, n, bands = image.shape
+
     blue = image[:, :, 1]
     green = image[:, :, 2]
     red = image[:, :, 3]
@@ -51,22 +60,9 @@ def KTTransformation(image):
     green_part = -0.3301 * blue - 0.3455 * green - 0.4508 * red + 0.6970 * nir - 0.0448 * swir1 - 0.284 * swir2
     water_part = 0.2651 * blue + 0.2367 * green + 0.1296 * red + 0.059 * nir - 0.7506 * swir1 - 0.5386 * swir2
 
-    show_pic.show_single_band(bright_part)
-    show_pic.show_single_band(green_part)
-    show_pic.show_single_band(water_part)
+    KT_img = np.zeros((m, n, 3), dtype=np.float32)
+    KT_img[:, :, 0] = bright_part
+    KT_img[:, :, 1] = green_part
+    KT_img[:, :, 2] = water_part
 
-
-ls8 = readRSImg.landsat8()
-# img = ls8.read_envi(path='E:\\RSImg\\pca_test.tif')
-    #
-    # out, index = pca(img)
-    # m, n, k = img.shape
-    #
-    # pca_img = np.zeros((m, n, k), dtype=np.float32)
-    # for i in index:
-    #     pca_img[:, :, i] = out[:, i].reshape(m, n)
-    #
-    # pic.show_colorful_img(pca_img, [0, 1, 2])
-img = ls8.read_envi(path='E:\\RSImg\\atmos')
-
-KTTransformation(img)
+    return KT_img
