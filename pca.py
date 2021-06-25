@@ -32,8 +32,8 @@ def pca(image):
     data = np.mat(data)
     data = normalize(data)
 
-    covX = np.cov(data)
-    featValue, featVec = np.linalg.eig(covX)
+    covX = np.cov(data) # 计算协方差矩阵
+    featValue, featVec = np.linalg.eig(covX) # 计算协方差矩阵的特征值和特征向量
     value_index = np.argsort(-featValue)  # 将特征值由大到小排列
 
     reconData = np.dot(data.T, featVec)
