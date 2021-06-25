@@ -1,10 +1,3 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import show_pic
-import readRSImg
-import cv2
-
-
 def ndvi(img):
     red = img[:, :, 3]
     nir = img[:, :, 4]
