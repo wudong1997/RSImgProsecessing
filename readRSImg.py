@@ -46,6 +46,7 @@ class landsat8(object):
         self.nan_position = np.where(image == 0)  # 将图片中的0替换为nan
         image[self.nan_position] = np.nan
 
+        # 读取全色波段数据
         dataset_pan = gdal.Open(self.band_file_name[7])
         image_pan = np.zeros((dataset_pan.RasterYSize, dataset_pan.RasterXSize), dtype=np.float32)
         pan_image = dataset_pan.GetRasterBand(1)
@@ -85,7 +86,7 @@ class landsat8(object):
         bands = image.shape[2]
 
         driver = gdal.GetDriverByName(format)
-        new_dataset = driver.Create(file_name, self.x_size, self.y_size, bands, gdal.GDT_Float32)
+        new_dataset = driver.Create(file_name, image.shape[1], image.shape[0], bands, gdal.GDT_Float32)
 
         new_dataset.SetGeoTransform(self.geotransform)
         new_dataset.SetProjection(self.projection)

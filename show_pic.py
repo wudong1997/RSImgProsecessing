@@ -14,7 +14,7 @@ def show_colorful_img(image, band_index):
 
 
 def show_single_band(image):
-    image = gray_process(image, 2)
+    image = gray_process(image)
     plt.cla()
     plt.imshow(image, cmap='gray')
     plt.axis('off')
