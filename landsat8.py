@@ -56,6 +56,11 @@ class landsat8(object):
         return self.read(self.SWIR)
 
     def read_envi(self):
+        """
+        读取envi保存后的遥感影像数据
+        调用该函数时创建对象时输入的路径应为完整路径
+        :return:
+        """
         dataset = gdal.Open(self.path)
         data_type = dataset.GetRasterBand(1).DataType
 
@@ -81,6 +86,14 @@ class landsat8(object):
 
 
 def write(image, file_path, GeoTrans=None, Project=None, format='ENVI'):
+    """
+    将图像写至文件
+    :param image: 需要保存的图像
+    :param file_path: 保存路径
+    :param GeoTrans: 坐标系
+    :param Project: 投影系
+    :param format: 保存格式，默认为ENVI
+    """
     if len(image.shape) == 3:
         bands = image.shape[2]
 
@@ -107,7 +120,13 @@ def write(image, file_path, GeoTrans=None, Project=None, format='ENVI'):
     del new_dataset
 
 
-def rad_calibration(self, img, img_type=None):
+def rad_calibration(img, img_type=None):
+    """
+    辐射定标函数
+    :param img: 输入需要进行辐射定标的图像
+    :param img_type: 根据数据类型读取响应的辐射定标参数
+    :return: 定标后的图像
+    """
     import readMTL
     mtl = readMTL.mtl()
     mtl.read_mtl()

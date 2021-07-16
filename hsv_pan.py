@@ -14,6 +14,13 @@ band_index = [3, 2, 1]
 
 
 def hsv_pan(low_img, high_img, index=None):
+    """
+    HSV图像融合
+    :param low_img: 低分辨率高光谱图像
+    :param high_img: 过分辨率全色波段图像
+    :param index: 进行融合的三个波段，
+                HSV变换只能针对三个通道的图像进行变换
+    """
     if index is None:
         index = [0, 1, 2]
 

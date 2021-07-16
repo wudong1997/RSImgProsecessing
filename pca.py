@@ -46,6 +46,10 @@ def pca(image):
 
 
 def KTTransformation(image):
+    """
+    KT变换，其变换参数为Landsat8 OLI，不可用于其他传感器
+    :param image: 进行变换的图像
+    """
     m, n, bands = image.shape
 
     blue = image[:, :, 1]
