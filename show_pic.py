@@ -3,7 +3,9 @@ import cv2
 import numpy as np
 
 
-def show_colorful_img(image, band_index):
+def show_RGB(image, band_index=None):
+    if band_index is None:
+        band_index = [0, 1, 2]
     true_color_image = image[:, :, band_index].astype(np.float32)
     true_color_image = linear_stretch(true_color_image)
     plt.cla()

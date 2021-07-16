@@ -4,7 +4,7 @@ from Py6S import *
 import readMTL
 
 
-def toa_cal(image, bands, img_type=None):
+def toa_cali(image, bands, img_type=None):
     import readMTL
     mtl = readMTL.mtl()
     mtl.read_mtl()
@@ -27,7 +27,12 @@ def toa_cal(image, bands, img_type=None):
     return toa_img
 
 
-def atmos_cla(image):
+def atmos_cali(image):
+    """
+    利用6s算法对图像进行大气校正
+    :param image: 输入需要进行校正的遥感影像
+    :return: 返回校正结果
+    """
     bands = image.shape[2]
     mtl = readMTL.mtl()
     mtl.read_mtl()
@@ -35,14 +40,17 @@ def atmos_cla(image):
     lat_cen = math.fabs(mtl.lat_cen)
     lon_cen = mtl.lon_cen
 
+    # 创建6s对象，6s具体使用方法可参见SixS()源文件
     s = SixS()
     s.geometry = Geometry.User()
 
+    # 太阳方位角及高度角
     s.geometry.solar_a = mtl.sun_azimuth
     s.geometry.solar_z = 90 - mtl.sun_elevation
     s.geometry.view_a = 0
     s.geometry.view_z = 0
 
+    # 日期信息，从MTL文件中读取
     s.geometry.month = mtl.date[1]
     s.geometry.day = mtl.date[2]
 
@@ -68,6 +76,7 @@ def atmos_cla(image):
 
     s.aot550 = 0.14497
 
+    # 波段中心波长
     cen_wavelength = [Wavelength(PredefinedWavelengths.LANDSAT_OLI_B1),
                       Wavelength(PredefinedWavelengths.LANDSAT_OLI_B2),
                       Wavelength(PredefinedWavelengths.LANDSAT_OLI_B3),
