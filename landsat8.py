@@ -1,6 +1,5 @@
 from osgeo import gdal
 import numpy as np
-import show_pic
 
 
 class landsat8(object):
@@ -70,11 +69,11 @@ class landsat8(object):
         self.geotransform = dataset.GetGeoTransform()
         self.projection = dataset.GetProjection()
 
-        self.bands = dataset.RasterCount
+        bands = dataset.RasterCount
 
-        image = np.zeros((self.y_size, self.x_size, self.bands), dtype=np.float32)
+        image = np.zeros((self.y_size, self.x_size, bands), dtype=np.float32)
 
-        for band in range(self.bands):
+        for band in range(bands):
             band_img = dataset.GetRasterBand(band + 1)
             image[:, :, band] = band_img.ReadAsArray()
 
@@ -144,13 +143,13 @@ def rad_calibration(img, img_type=None):
             offset = add[band]
             cali_img[:, :, band] = img[:, :, band] * gain + offset
 
-    elif img_type is 'Pan':
+    elif img_type == 'Pan':
         gain = mult[7]
         offset = add[7]
 
         cali_img[:, :] = img[:, :] * gain + offset
 
-    elif img_type is 'SWIR':
+    elif img_type == 'SWIR':
         bands = img.shape[2]
 
         for band in range(bands):
