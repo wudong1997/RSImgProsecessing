@@ -35,9 +35,9 @@ def linear_stretch(image):
     return np.uint8(result)
 
 
-def gray_process(gray, max_out=255, min_out=0):
-    truncated_up = np.nanpercentile(gray, 98)  # 计算数据的98%个数，而忽略nan值。
-    truncated_down = np.nanpercentile(gray, 2)
+def gray_process(gray, percent=2, max_out=255, min_out=0):
+    truncated_up = np.nanpercentile(gray, 100-percent)  # 计算数据的98%个数，而忽略nan值。
+    truncated_down = np.nanpercentile(gray, percent)
     truncated_gray = np.clip(gray, a_min=truncated_down, a_max=truncated_up)  # 将数组中的数限制在a_min与a_max之间
     processed_gray = ((truncated_gray - truncated_down) / (truncated_up - truncated_down)) * (
             max_out - min_out) + min_out
