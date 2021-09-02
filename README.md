@@ -168,6 +168,7 @@ def atmos_cali(image):
     return atmos_re
 ```
 ### 结果对比
+ENVI FLAASH算法大气校正结果（左）与py6s大气校正结果（右）
 ![image](https://github.com/wudong1997/RSImgProsecessing/blob/master/image/FLAASH.png)   ![image](https://github.com/wudong1997/RSImgProsecessing/blob/master/image/py6s.png)
-
+ENVI FLAASH算法大气校正结果光谱（左）与py6s大气校正结果光谱（右）
 ![image](https://github.com/wudong1997/RSImgProsecessing/blob/master/image/FLAASH_spec.png)    ![image](https://github.com/wudong1997/RSImgProsecessing/blob/master/image/py6s_spec.png)
