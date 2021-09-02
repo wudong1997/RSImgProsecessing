@@ -43,4 +43,25 @@ conda install -c conda-forge gdal
 
         return image
 ```
-    
+### 将图像写入文件
+```
+def write(image, file_path, GeoTrans=None, Project=None, format='ENVI'):
+    """
+    将图像写至文件
+    :param image: 需要保存的图像
+    :param file_path: 保存路径
+    :param GeoTrans: 坐标系
+    :param Project: 投影系
+    :param format: 保存格式，默认为ENVI
+    """
+
+    driver = gdal.GetDriverByName(format)   # 文件格式 
+    new_dataset = driver.Create(file_path, image.shape[1], image.shape[0], image.shape[2], gdal.GDT_Float32)
+
+    new_dataset.SetGeoTransform(GeoTrans)   # 写入仿射变换参数
+    new_dataset.SetProjection(Project)  # 写入投影
+
+    for band in range(bands):
+        new_dataset.GetRasterBand(band + 1).WriteArray(image[:, :, band])   # 写入数组数据
+        new_dataset.FlushCache()
+```
