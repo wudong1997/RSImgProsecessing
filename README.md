@@ -2,6 +2,23 @@
 基于python的遥感数字影像处理
 
 ## Conda
+Python的版本比较多，并且它的库也非常广泛，同时库和库之间存在很多依赖关系，所以在库的安装和版本的管理上很麻烦。  
+Conda 就是一个开源的软件包管理系统和环境管理系统，用于安装多个版本的软件包及其依赖关系，并在它们之间轻松切换。  
+#### 安装Conda：  
+Anaconda：https://www.anaconda.com/  
+安装时全部默认设置就可以
+#### 创建环境
+```
+conda create --name env python=3.5
+```
+#### 激活环境
+```
+conda activate env
+```
+#### 查看已安装包
+```
+conda list
+```
 
 
 ## python GDAL库
