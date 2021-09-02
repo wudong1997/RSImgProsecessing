@@ -98,3 +98,73 @@ Expected result: 619.158000
 Actual result: 619.158000
 #### Results agree, Py6S is working correctly
 ```
+
+### 进行大气校正
+```
+def atmos_cali(image):
+    """
+    利用6s算法对图像进行大气校正
+    :param image: 输入需要进行校正的遥感影像
+    :return: 返回校正结果
+    """
+    bands = image.shape[2]
+    mtl = readMTL.mtl()
+    mtl.read_mtl()
+
+    lat_cen = math.fabs(mtl.lat_cen)
+    lon_cen = mtl.lon_cen
+
+    # 创建6s对象，6s具体使用方法可参见SixS()源文件
+    s = SixS()
+    s.geometry = Geometry.User()
+
+    # 太阳方位角及高度角，从MTL文件中读取
+    s.geometry.solar_a = mtl.sun_azimuth
+    s.geometry.solar_z = 90 - mtl.sun_elevation
+    s.geometry.view_a = 0
+    s.geometry.view_z = 0
+
+    # 日期信息，从MTL文件中读取
+    s.geometry.month = mtl.date[1]
+    s.geometry.day = mtl.date[2]
+
+    if lat_cen <= 30:
+        s.atmos_profile = AtmosProfile.PredefinedType(AtmosProfile.Tropical)    # 大气配置文件
+    elif 30 < lat_cen <= 60:
+        ...
+    elif 60 < lat_cen:
+        ...
+
+    s.aero_profile = AtmosProfile.PredefinedType(AeroProfile.Continental)   # 气溶胶配置文件。
+    s.ground_reflectance = GroundReflectance.HomogeneousLambertian(0.36)    # 地面反射率设置。
+
+    s.altitudes = Altitudes()
+    s.altitudes.set_target_custom_altitude(2.3)
+    s.altitudes.set_sensor_satellite_level()
+
+    s.aot550 = 0.14497  # 用于模拟的气溶胶光学厚度值（550nm处）
+
+    # 波段中心波长
+    cen_wavelength = [Wavelength(PredefinedWavelengths.LANDSAT_OLI_B1), ...]
+
+    s.atmos_corr = AtmosCorr.AtmosCorrLambertianFromReflectance(-0.1)   # 是否进行大气校正的设置，以及该校正的参数。
+
+    temp = np.zeros_like(image, dtype=np.float32)   # 创建空数组
+    atmos_re = np.zeros_like(image, dtype=np.float32)   # 空数组，储存结果
+
+    for band in range(bands):
+        s.wavelength = cen_wavelength[band]
+        s.run()
+        xa = s.outputs.coef_xa
+        xb = s.outputs.coef_xb
+        xc = s.outputs.coef_xc
+        x = s.outputs.values
+        print(x)
+
+        temp[:, :, band] = xa * image[:, :, band] - xb
+        atmos_re[:, :, band] = temp[:, :, band] / (1 + temp[:, :, band] * xc) *1000
+
+    del temp
+    return atmos_re
+```
+### 结果对比
