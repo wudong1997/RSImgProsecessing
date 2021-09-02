@@ -65,3 +65,36 @@ def write(image, file_path, GeoTrans=None, Project=None, format='ENVI'):
         new_dataset.GetRasterBand(band + 1).WriteArray(image[:, :, band])   # 写入数组数据
         new_dataset.FlushCache()
 ```
+### 波段计算
+```
+def ndvi(img):
+    red = img[:, :, 3]
+    nir = img[:, :, 4]
+
+    NDVI = (nir - red) / (nir + red)
+    return NDVI
+```
+## python大气校正模块 py6s库
+Py6S 是通过 Python 对 the Second Simulation of the Satellite Signal in the Solar Spectrum (6S) 大气传输模型进行二次模拟的接口。  
+### py6s安装
+Windows环境下推荐使用Conda进行安装（其他环境不清楚），手动安装极其麻烦（非常不推荐）  
+Py6S 及其所有依赖项（包括 6S 本身）可通过conda上的包管理器获得conda-forge。  
+这是安装 Py6S 的最简单方法，强烈推荐。  
+  
+通过conda，运行以下命令创建一个包含 Py6S 及其所有依赖项的新环境：  
+```
+conda create -n py6s-env -c conda-forge py6s
+```
+测试py6s是否正确安装
+```
+python
+>>> from Py6S import *
+>>> SixS.test()
+6S wrapper script by Robin Wilson
+Using 6S located at <PATH_TO_SIXS_EXE>
+Running 6S using a set of test parameters
+The results are:
+Expected result: 619.158000
+Actual result: 619.158000
+#### Results agree, Py6S is working correctly
+```
