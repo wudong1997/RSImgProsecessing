@@ -168,3 +168,6 @@ def atmos_cali(image):
     return atmos_re
 ```
 ### 结果对比
+![image](https://github.com/wudong1997/RSImgProsecessing/blob/master/image/FLAASH.png)   ![image](https://github.com/wudong1997/RSImgProsecessing/blob/master/image/py6s.png)
+
+![image](https://github.com/wudong1997/RSImgProsecessing/blob/master/image/FLAASH_spec.png)    ![image](https://github.com/wudong1997/RSImgProsecessing/blob/master/image/py6s_spec.png)
