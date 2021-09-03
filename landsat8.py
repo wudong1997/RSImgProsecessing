@@ -19,6 +19,11 @@ class landsat8(object):
         self.SWIR = np.arange(9, 11, 1)
 
     def read(self, sensor_type):
+        """
+        根据不同传感器类型读取对应的数据
+        :param sensor_type: 传感器类型，包括OLI、Pan、SWIR
+        :return: 图像数组
+        """
         for band in sensor_type:
             band_file_name = self.path + '_B' + str(band + 1) + '.tif'
             self.band_file_name.append(band_file_name)
@@ -26,11 +31,12 @@ class landsat8(object):
         dataset = gdal.Open(self.band_file_name[0])
         data_type = dataset.GetRasterBand(1).DataType
 
+        # 图像栅格矩阵的行列数
         self.x_size = dataset.RasterXSize
         self.y_size = dataset.RasterYSize
 
-        self.geotransform = dataset.GetGeoTransform()
-        self.projection = dataset.GetProjection()
+        self.geotransform = dataset.GetGeoTransform()   # 仿射矩阵，左上角像素的大地坐标和像素分辨率
+        self.projection = dataset.GetProjection()   # 地图投影
 
         image = np.zeros((self.y_size, self.x_size, len(sensor_type)), dtype=np.float32)
 
