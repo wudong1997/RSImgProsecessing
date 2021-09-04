@@ -1,12 +1,7 @@
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 from sklearn import model_selection
-import show_pic
 from sklearn import svm
-from landsat8 import landsat8
-
-test = landsat8('E:\\RSImg\\class_test.dat')
-d = test.read_envi()
 
 
 def Iris_label(s):
@@ -16,7 +11,7 @@ def Iris_label(s):
 
 def RFC_training(sample):
     """
-    训练模型
+    随机森林训练模型
     :param sample: 样本数据
     :return: 训练结果
     """
@@ -38,7 +33,7 @@ def RFC_training(sample):
 
 def SVM_training(sample):
     """
-    训练模型
+    支持向量机训练模型
     :param sample: 样本数据
     :return: 训练结果
     """
@@ -77,6 +72,3 @@ def RFCClass(dataset, sample):
 
     return pred
 
-
-res = RFCClass(d, 'data.csv')
-show_pic.show_single_band(res)
