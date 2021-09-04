@@ -83,8 +83,8 @@ class landsat8(object):
             band_img = dataset.GetRasterBand(band + 1)
             image[:, :, band] = band_img.ReadAsArray()
 
-        self.nan_position = np.where(image == 0)  # 将图片中的0替换为nan
-        image[self.nan_position] = np.nan
+        # self.nan_position = np.where(image == 0)  # 将图片中的0替换为nan
+        # image[self.nan_position] = np.nan
 
         del dataset
         return image
